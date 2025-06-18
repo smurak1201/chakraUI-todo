@@ -1,11 +1,9 @@
 // Chakra UIのレイアウト・UI部品をインポート
-import { Box, Flex, IconButton, Input, useToken } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Input } from "@chakra-ui/react";
 // ゴミ箱アイコンと編集アイコン
 import { MdDelete, MdEdit } from "react-icons/md";
-// 背景色を半透明にするユーティリティ
-import { transparentize } from "@chakra-ui/theme-tools";
 // カラーモード取得用
-import { useColorMode } from "@/components/ui/color-mode";
+import { useColorModeValue } from "@/components/ui/color-mode";
 import { useState } from "react";
 import { FadeList } from "./FadeList";
 
@@ -18,19 +16,11 @@ interface TodoListProps {
 
 // Todoリスト本体
 export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
-  // カラーモード取得（dark/light）
-  const { colorMode } = useColorMode();
-  // テーマカラー取得
-  const [gray700, white] = useToken("colors", ["gray.700", "white"]);
   // 編集中のインデックスと値を管理
   const [editIdx, setEditIdx] = useState<number | null>(null); // 編集中のTodoのインデックス
   const [editValue, setEditValue] = useState(""); // 編集中の値
-  // リストアイテムの背景色をカラーモードで半透明に
-  const itemBg = (
-    colorMode === "dark"
-      ? transparentize(gray700, 0.7)
-      : transparentize(white, 0.7)
-  ).toString();
+  // リストアイテムの背景色をカラーモードで切り替え（Inputと同じ色に）
+  const itemBg = useColorModeValue("white", "gray.700");
 
   return (
     // リスト全体のラッパー
