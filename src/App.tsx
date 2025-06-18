@@ -28,6 +28,10 @@ export default function App() {
   const removeTodo = (index: number) => {
     setTodos(todos.filter((_, i) => i !== index));
   };
+  // Todo編集処理
+  const updateTodo = (index: number, value: string) => {
+    setTodos(todos.map((t, i) => (i === index ? value : t)));
+  };
 
   return (
     // 全体レイアウト
@@ -41,7 +45,7 @@ export default function App() {
       {/* Todo追加フォーム */}
       <TodoForm input={input} setInput={setInput} addTodo={addTodo} />
       {/* Todoリスト */}
-      <TodoList todos={todos} removeTodo={removeTodo} />
+      <TodoList todos={todos} removeTodo={removeTodo} updateTodo={updateTodo} />
     </Flex>
   );
 }
