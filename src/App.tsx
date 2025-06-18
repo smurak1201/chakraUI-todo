@@ -20,7 +20,8 @@ export default function App() {
 
   // Todo追加処理
   const addTodo = () => {
-    if (input.trim() === "") return;
+    if (input.trim() === "") return; // 空白のみなら追加しない
+    // 入力値をトリムして空白を除去し、Todoリストに追加
     setTodos([...todos, input.trim()]);
     setInput("");
   };
@@ -30,6 +31,7 @@ export default function App() {
   };
   // Todo編集処理
   const updateTodo = (index: number, value: string) => {
+    if (value.trim() === "") return; // 空白のみなら編集しない
     setTodos(todos.map((t, i) => (i === index ? value : t)));
   };
 
