@@ -41,6 +41,7 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
             {/* 編集モード：編集ボタンを押したときだけInput表示 */}
             {editIdx === idx ? (
               <Input
+                fontSize="16px" // スマホでの自動ズーム防止
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
                 size="sm"
