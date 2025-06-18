@@ -76,6 +76,8 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
                   setEditValue(todo);
                 }}
                 mr={1}
+                _hover={{ bg: "blue.100" }}
+                _dark={{ _hover: { bg: "blue.700" } }}
               >
                 <MdEdit />
               </IconButton>
@@ -87,6 +89,8 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
               variant="ghost"
               size="sm"
               onClick={() => removeTodo(idx)}
+              _hover={{ bg: "red.100" }}
+              _dark={{ _hover: { bg: "red.700" } }}
             >
               <MdDelete />
             </IconButton>
