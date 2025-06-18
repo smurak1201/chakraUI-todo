@@ -1,12 +1,5 @@
 // Chakra UIのレイアウト・UI部品をインポート
-import {
-  Box,
-  Stack,
-  Flex,
-  IconButton,
-  Input,
-  useToken,
-} from "@chakra-ui/react";
+import { Box, Flex, IconButton, Input, useToken } from "@chakra-ui/react";
 // ゴミ箱アイコンと編集アイコン
 import { MdDelete, MdEdit } from "react-icons/md";
 // 背景色を半透明にするユーティリティ
@@ -14,6 +7,7 @@ import { transparentize } from "@chakra-ui/theme-tools";
 // カラーモード取得用
 import { useColorMode } from "@/components/ui/color-mode";
 import { useState } from "react";
+import { FadeList } from "./FadeList";
 
 // TodoListコンポーネントのprops型定義
 interface TodoListProps {
@@ -42,7 +36,7 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
     // リスト全体のラッパー
     <Box w="100%" maxW="md">
       {/* Todoリスト（縦並び） */}
-      <Stack gap={3}>
+      <FadeList gap={3}>
         {todos.map((todo, idx) => (
           // 1つのTodoアイテム
           <Flex
@@ -108,7 +102,7 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
             </IconButton>
           </Flex>
         ))}
-      </Stack>
+      </FadeList>
     </Box>
   );
 }
