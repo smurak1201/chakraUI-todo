@@ -31,6 +31,7 @@ export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
         value={input}
         onChange={(e) => setInput(e.target.value)} // 入力値の変更を反映
         bg={colorMode === "dark" ? "gray.700" : "white"} // カラーモードで背景色切替
+        fontSize="16px" // スマホでの自動ズーム防止
       />
       {/* 追加ボタン */}
       <Button colorScheme="teal" onClick={addTodo} type="submit">
