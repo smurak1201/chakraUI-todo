@@ -6,6 +6,7 @@ import { MdDelete, MdEdit } from "react-icons/md";
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { useState } from "react";
 import { FadeList } from "./FadeList";
+import { Reorder } from "framer-motion";
 
 // TodoListコンポーネントのprops型定義
 interface TodoListProps {
@@ -15,7 +16,12 @@ interface TodoListProps {
 }
 
 // Todoリスト本体
-export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
+export function TodoList({
+  todos,
+  removeTodo,
+  updateTodo,
+  setTodos,
+}: TodoListProps & { setTodos: (todos: string[]) => void }) {
   // 編集中のインデックスと値を管理
   const [editIdx, setEditIdx] = useState<number | null>(null); // 編集中のTodoのインデックス
   const [editValue, setEditValue] = useState(""); // 編集中の値
@@ -25,79 +31,82 @@ export function TodoList({ todos, removeTodo, updateTodo }: TodoListProps) {
   return (
     // リスト全体のラッパー
     <Box w="100%" maxW="md">
-      {/* Todoリスト（縦並び） */}
-      <FadeList gap={3}>
+      <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
         {todos.map((todo, idx) => (
-          // 1つのTodoアイテム
-          <Flex
-            key={idx}
-            align="center"
-            justify="space-between"
-            bg={itemBg}
-            p={3}
-            borderRadius="md"
-            boxShadow="sm"
+          <Reorder.Item
+            value={todo}
+            key={todo}
+            style={{ listStyle: "none", width: "100%" }}
           >
-            {/* 編集モード：編集ボタンを押したときだけInput表示 */}
-            {editIdx === idx ? (
-              <Input
-                fontSize="16px" // スマホでの自動ズーム防止
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                size="sm"
-                onBlur={() => {
-                  updateTodo(idx, editValue); // 編集確定
-                  setEditIdx(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    updateTodo(idx, editValue); // Enterで確定
+            <Flex
+              align="center"
+              justify="space-between"
+              bg={itemBg}
+              p={3}
+              borderRadius="md"
+              boxShadow="sm"
+            >
+              {/* 編集モード：編集ボタンを押したときだけInput表示 */}
+              {editIdx === idx ? (
+                <Input
+                  fontSize="16px" // スマホでの自動ズーム防止
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  size="sm"
+                  onBlur={() => {
+                    updateTodo(idx, editValue); // 編集確定
                     setEditIdx(null);
-                  }
-                  if (e.key === "Escape") {
-                    setEditIdx(null); // Escでキャンセル
-                  }
-                }}
-                autoFocus
-                mr={2}
-              />
-            ) : (
-              // 通常表示：テキストのみ
-              <span style={{ flex: 1 }}>{todo}</span>
-            )}
-            {/* 編集ボタン：押すと編集モードに */}
-            {editIdx === idx ? null : (
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      updateTodo(idx, editValue); // Enterで確定
+                      setEditIdx(null);
+                    }
+                    if (e.key === "Escape") {
+                      setEditIdx(null); // Escでキャンセル
+                    }
+                  }}
+                  autoFocus
+                  mr={2}
+                />
+              ) : (
+                // 通常表示：テキストのみ
+                <span style={{ flex: 1 }}>{todo}</span>
+              )}
+              {/* 編集ボタン：押すと編集モードに */}
+              {editIdx === idx ? null : (
+                <IconButton
+                  aria-label="編集"
+                  colorScheme="blue"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setEditIdx(idx);
+                    setEditValue(todo);
+                  }}
+                  mr={1}
+                  _hover={{ bg: "blue.100" }}
+                  _dark={{ _hover: { bg: "blue.700" } }}
+                >
+                  <MdEdit />
+                </IconButton>
+              )}
+              {/* 削除ボタン */}
               <IconButton
-                aria-label="編集"
-                colorScheme="blue"
+                aria-label="削除"
+                colorScheme="red"
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  setEditIdx(idx);
-                  setEditValue(todo);
-                }}
-                mr={1}
-                _hover={{ bg: "blue.100" }}
-                _dark={{ _hover: { bg: "blue.700" } }}
+                onClick={() => removeTodo(idx)}
+                _hover={{ bg: "red.100" }}
+                _dark={{ _hover: { bg: "red.700" } }}
               >
-                <MdEdit />
+                <MdDelete />
               </IconButton>
-            )}
-            {/* 削除ボタン */}
-            <IconButton
-              aria-label="削除"
-              colorScheme="red"
-              variant="ghost"
-              size="sm"
-              onClick={() => removeTodo(idx)}
-              _hover={{ bg: "red.100" }}
-              _dark={{ _hover: { bg: "red.700" } }}
-            >
-              <MdDelete />
-            </IconButton>
-          </Flex>
+            </Flex>
+          </Reorder.Item>
         ))}
-      </FadeList>
+      </Reorder.Group>
     </Box>
   );
 }

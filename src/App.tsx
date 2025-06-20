@@ -47,7 +47,12 @@ export default function App() {
       {/* Todo追加フォーム */}
       <TodoForm input={input} setInput={setInput} addTodo={addTodo} />
       {/* Todoリスト */}
-      <TodoList todos={todos} removeTodo={removeTodo} updateTodo={updateTodo} />
+      <TodoList
+        todos={todos}
+        removeTodo={removeTodo}
+        updateTodo={updateTodo}
+        setTodos={setTodos}
+      />
     </Flex>
   );
 }
