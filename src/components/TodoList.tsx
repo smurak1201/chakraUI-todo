@@ -9,9 +9,10 @@ import { Reorder } from "framer-motion";
 
 // TodoListコンポーネントのprops型定義
 interface TodoListProps {
-  todos: string[]; // Todoリスト配列
-  removeTodo: (index: number) => void; // Todo削除関数
-  updateTodo: (index: number, value: string) => void; // Todo編集関数
+  todos: { id: number; text: string }[]; // Todoリスト配列
+  removeTodo: (index: number) => void;
+  updateTodo: (index: number, value: string) => void;
+  setTodos: (todos: { id: number; text: string }[]) => void;
 }
 
 // Todoリスト本体
@@ -20,7 +21,7 @@ export function TodoList({
   removeTodo,
   updateTodo,
   setTodos,
-}: TodoListProps & { setTodos: (todos: string[]) => void }) {
+}: TodoListProps) {
   // 編集中のインデックスと値を管理
   const [editIdx, setEditIdx] = useState<number | null>(null); // 編集中のTodoのインデックス
   const [editValue, setEditValue] = useState(""); // 編集中の値
@@ -34,7 +35,7 @@ export function TodoList({
         {todos.map((todo, idx) => (
           <Reorder.Item
             value={todo}
-            key={todo}
+            key={todo.id}
             style={{
               listStyle: "none",
               width: "100%",
@@ -74,7 +75,7 @@ export function TodoList({
                 />
               ) : (
                 // 通常表示：テキストのみ
-                <span style={{ flex: 1 }}>{todo}</span>
+                <span style={{ flex: 1 }}>{todo.text}</span>
               )}
               {/* 編集ボタン：押すと編集モードに */}
               {editIdx === idx ? null : (
@@ -85,7 +86,7 @@ export function TodoList({
                   size="sm"
                   onClick={() => {
                     setEditIdx(idx);
-                    setEditValue(todo);
+                    setEditValue(todo.text);
                   }}
                   mr={1}
                   _hover={{ bg: "blue.100" }}

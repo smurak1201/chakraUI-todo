@@ -1,5 +1,5 @@
 // ReactのuseStateフックをインポート
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // Chakra UIのレイアウト・見出し・カラートークン取得フック
 import { Flex, Heading, useToken } from "@chakra-ui/react";
 // カラーモード切替ボタン
@@ -8,32 +8,63 @@ import { ColorModeToggle } from "./components/ColorModeToggle";
 import { TodoForm } from "./components/TodoForm";
 // Todoリスト
 import { TodoList } from "./components/TodoList";
+// ログインフォーム
+import { LoginForm } from "./components/LoginForm";
 
 // アプリ全体のレイアウトコンポーネント
 export default function App() {
-  // Todoリストの状態
-  const [todos, setTodos] = useState<string[]>([]);
-  // 入力欄の状態
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Todoリストの状態（id, text型に変更）
+  const [todos, setTodos] = useState<{ id: number; text: string }[]>([]);
   const [input, setInput] = useState("");
-  // Chakra UIのテーマカラー取得
   const [teal500] = useToken("colors", ["teal.500"]);
 
-  // Todo追加処理
-  const addTodo = () => {
-    if (input.trim() === "") return; // 空白のみなら追加しない
-    // 入力値をトリムして空白を除去し、Todoリストに追加
-    setTodos([...todos, input.trim()]);
+  // Todo一覧取得
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    fetch("http://localhost/chakuraUI-todo/todos.php")
+      .then((res) => res.json())
+      .then((data) => setTodos(data));
+  }, [isLoggedIn]);
+
+  // Todo追加
+  const addTodo = async () => {
+    if (input.trim() === "") return;
+    const res = await fetch("http://localhost/chakuraUI-todo/todos.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input }),
+    });
+    const newTodo = await res.json();
+    setTodos([...todos, newTodo]);
     setInput("");
   };
-  // Todo削除処理
-  const removeTodo = (index: number) => {
+  // Todo削除
+  const removeTodo = async (index: number) => {
+    const id = todos[index].id;
+    await fetch("http://localhost/chakuraUI-todo/todos.php", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
     setTodos(todos.filter((_, i) => i !== index));
   };
-  // Todo編集処理
-  const updateTodo = (index: number, value: string) => {
-    if (value.trim() === "") return; // 空白のみなら編集しない
-    setTodos(todos.map((t, i) => (i === index ? value : t)));
+  // Todo編集
+  const updateTodo = async (index: number, value: string) => {
+    if (value.trim() === "") return;
+    const id = todos[index].id;
+    await fetch("http://localhost/chakuraUI-todo/todos.php", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, text: value }),
+    });
+    setTodos(todos.map((t, i) => (i === index ? { ...t, text: value } : t)));
   };
+
+  // ログインしていない場合はLoginFormを表示
+  if (!isLoggedIn) {
+    return <LoginForm onLogin={() => setIsLoggedIn(true)} />;
+  }
 
   return (
     // 全体レイアウト
