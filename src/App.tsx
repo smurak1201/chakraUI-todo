@@ -84,6 +84,7 @@ export default function App() {
       minH="100vh"
       p={8}
       position="relative"
+      mt={12}
     >
       {/* 上部バー：ログアウトボタンとカラーモード切替ボタンを左右に配置 */}
       <Flex
