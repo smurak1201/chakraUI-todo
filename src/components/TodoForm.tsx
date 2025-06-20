@@ -42,7 +42,12 @@ export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
             flex={1}
           />
           {/* 追加ボタン */}
-          <Button colorScheme="teal" type="submit" variant="outline">
+          <Button
+            colorScheme="teal"
+            type="submit"
+            variant="outline"
+            fontSize="16px"
+          >
             追加
           </Button>
         </Flex>
