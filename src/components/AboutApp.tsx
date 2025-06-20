@@ -32,6 +32,8 @@ export function AboutApp({ onClose }: { onClose?: () => void }) {
       bg={bg}
       boxShadow="md"
       position="relative"
+      maxH="90vh"
+      overflowY="auto"
     >
       {/* 閉じるボタン（右上） */}
       {onClose && (
