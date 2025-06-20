@@ -13,7 +13,10 @@ import { LoginForm } from "./components/LoginForm";
 
 // アプリ全体のレイアウトコンポーネント
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // localStorageから初期値を取得
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
   // Todoリストの状態（id, text型に変更）
   const [todos, setTodos] = useState<{ id: number; text: string }[]>([]);
   const [input, setInput] = useState("");
@@ -63,7 +66,14 @@ export default function App() {
 
   // ログインしていない場合はLoginFormを表示
   if (!isLoggedIn) {
-    return <LoginForm onLogin={() => setIsLoggedIn(true)} />;
+    return (
+      <LoginForm
+        onLogin={() => {
+          setIsLoggedIn(true);
+          localStorage.setItem("isLoggedIn", "true");
+        }}
+      />
+    );
   }
 
   return (
