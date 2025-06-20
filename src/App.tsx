@@ -143,12 +143,6 @@ export default function App() {
       position="relative"
       mt={12}
     >
-      {/* ローカルモード時の案内・エラー表示 */}
-      {isLocalMode && error && (
-        <Box color="orange.400" textAlign="center" mb={4} fontWeight="bold">
-          {error}
-        </Box>
-      )}
       {/* 上部バー：ログアウトボタンとカラーモード切替ボタンを左右に配置 */}
       <Flex
         w="100%"
@@ -184,6 +178,12 @@ export default function App() {
       <Heading mb={6} color={teal500} mt={12}>
         Chakra UI Todoアプリ
       </Heading>
+      {/* ローカルモード時の案内・エラー表示 */}
+      {isLocalMode && error && (
+        <Box color="orange.400" textAlign="center" mb={4} fontWeight="bold">
+          {error}
+        </Box>
+      )}
       {/* Todo追加フォーム */}
       <TodoForm input={input} setInput={setInput} addTodo={addTodo} />
       {/* Todoリスト */}

@@ -11,6 +11,10 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showLocalConfirm, setShowLocalConfirm] = useState(false);
+  const [localErrorType, setLocalErrorType] = useState<
+    "auth" | "server" | null
+  >(null);
   const [teal500] = useToken("colors", ["teal.500"]);
   const { colorMode } = useColorMode();
   const boxBg = colorMode === "dark" ? "gray.800" : "white";
@@ -27,8 +31,8 @@ export function LoginForm({
         body: JSON.stringify({ username, password }),
       });
       if (!res.ok) {
-        localStorage.setItem("localMode", "true");
-        onLogin(true, "サーバに接続できません。ローカルモードで動作します。");
+        setLocalErrorType("server");
+        setShowLocalConfirm(true);
         return;
       }
       const data = await res.json();
@@ -36,17 +40,30 @@ export function LoginForm({
         localStorage.removeItem("localMode");
         onLogin(false, "");
       } else {
-        localStorage.setItem("localMode", "true");
-        onLogin(
-          true,
-          "ユーザー名またはパスワードが違います。ローカルモードで動作します。"
-        );
+        setLocalErrorType("auth");
+        setShowLocalConfirm(true);
       }
     } catch (e) {
-      onLogin(true, "サーバに接続できません。ローカルモードで動作します。");
+      setLocalErrorType("server");
+      setShowLocalConfirm(true);
     } finally {
       setLoading(false);
     }
+  };
+
+  // ローカルモードで続行する場合の処理
+  const handleLocalContinue = () => {
+    localStorage.setItem("localMode", "true");
+    setShowLocalConfirm(false);
+    let msg = "";
+    if (localErrorType === "auth") {
+      msg =
+        "ユーザー名またはパスワードが違います。ローカルモードで動作します。";
+    } else if (localErrorType === "server") {
+      msg = "サーバに接続できません。ローカルモードで動作します。";
+    }
+    setError(msg);
+    onLogin(true, msg);
   };
 
   return (
@@ -57,6 +74,7 @@ export function LoginForm({
       minH="100vh"
       bg={pageBg}
       p={4}
+      position="relative"
     >
       <Box
         bg={boxBg}
@@ -125,6 +143,64 @@ export function LoginForm({
             </Box>
           )}
         </form>
+        {/* カスタムダイアログ */}
+        {showLocalConfirm && (
+          <Box
+            position="fixed"
+            top={0}
+            left={0}
+            w="100vw"
+            h="100vh"
+            bg="blackAlpha.600"
+            zIndex={1000}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box
+              bg="white"
+              p={8}
+              borderRadius="xl"
+              boxShadow="2xl"
+              minW="300px"
+              maxW="90vw"
+            >
+              <Box
+                fontWeight="bold"
+                fontSize="lg"
+                mb={4}
+                color="orange.500"
+                textAlign="center"
+              >
+                ローカルモードで続行しますか？
+              </Box>
+              <Box mb={6} color="gray.700" textAlign="center">
+                {localErrorType === "auth"
+                  ? "ユーザー名またはパスワードが違います。"
+                  : "サーバに接続できません。"}
+                <br />
+                サーバ認証なしでローカルモードで続行しますか？
+              </Box>
+              <Flex justify="flex-end">
+                <Button
+                  onClick={() => setShowLocalConfirm(false)}
+                  mr={3}
+                  variant="outline"
+                  colorScheme="gray"
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  colorScheme="orange"
+                  onClick={handleLocalContinue}
+                  ml={3}
+                >
+                  ローカルで続行
+                </Button>
+              </Flex>
+            </Box>
+          </Box>
+        )}
       </Box>
     </Flex>
   );
