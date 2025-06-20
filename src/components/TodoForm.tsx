@@ -18,28 +18,35 @@ export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
   return (
     <Box position="relative" w="100%">
       {/* フォーム全体のレイアウト */}
-      <Flex
-        as="form"
-        onSubmit={(e) => {
-          e.preventDefault(); // フォーム送信時のリロード防止
-          addTodo(); // Todo追加処理
-        }}
-        mb={6}
-        gap={2}
-      >
-        {/* 入力欄 */}
-        <Input
-          placeholder="新しいタスクを入力..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)} // 入力値の変更を反映
-          bg={colorMode === "dark" ? "gray.700" : "white"} // カラーモードで背景色切替
-          fontSize="16px" // スマホでの自動ズーム防止
-        />
-        {/* 追加ボタン */}
-        <Button colorScheme="teal" type="submit">
-          追加
-        </Button>
-      </Flex>
+      <Box w="100%" maxW="md" mx="auto" mb={6}>
+        <Flex
+          as="form"
+          onSubmit={(e) => {
+            e.preventDefault(); // フォーム送信時のリロード防止
+            addTodo(); // Todo追加処理
+          }}
+          gap={2}
+          bg={colorMode === "dark" ? "gray.800" : "white"}
+          borderRadius="md"
+          boxShadow="md"
+          p={{ base: 2, md: 4 }}
+          align="center"
+        >
+          {/* 入力欄 */}
+          <Input
+            placeholder="新しいタスクを入力..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)} // 入力値の変更を反映
+            bg={colorMode === "dark" ? "gray.700" : "gray.100"} // カラーモードで背景色切替
+            fontSize="16px" // スマホでの自動ズーム防止
+            flex={1}
+          />
+          {/* 追加ボタン */}
+          <Button colorScheme="teal" type="submit" variant="outline">
+            追加
+          </Button>
+        </Flex>
+      </Box>
     </Box>
   );
 }

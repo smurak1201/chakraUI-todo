@@ -30,7 +30,7 @@ export function TodoList({
 
   return (
     // リスト全体のラッパー
-    <Box w="100%" maxW="md">
+    <Box w="100%" maxW="md" mx="auto">
       <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
         {todos.map((todo, idx) => (
           <Reorder.Item
@@ -49,64 +49,65 @@ export function TodoList({
               p={3}
               borderRadius="md"
               boxShadow="sm"
+              mb={2}
             >
               {/* 編集モード：編集ボタンを押したときだけInput表示 */}
               {editIdx === idx ? (
                 <Input
-                  fontSize="16px" // スマホでの自動ズーム防止
+                  fontSize="16px"
                   value={editValue}
                   onChange={(e) => setEditValue(e.target.value)}
                   size="sm"
                   onBlur={() => {
-                    updateTodo(idx, editValue); // 編集確定
+                    updateTodo(idx, editValue);
                     setEditIdx(null);
                   }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      updateTodo(idx, editValue); // Enterで確定
+                      updateTodo(idx, editValue);
                       setEditIdx(null);
                     }
                     if (e.key === "Escape") {
-                      setEditIdx(null); // Escでキャンセル
+                      setEditIdx(null);
                     }
                   }}
                   autoFocus
                   mr={2}
+                  bg={itemBg}
+                  borderRadius="md"
+                  boxShadow="xs"
                 />
               ) : (
-                // 通常表示：テキストのみ
                 <span style={{ flex: 1 }}>{todo.text}</span>
               )}
-              {/* 編集ボタン：押すと編集モードに */}
+              {/* 編集ボタン */}
               {editIdx === idx ? null : (
                 <IconButton
                   aria-label="編集"
-                  colorScheme="blue"
-                  variant="ghost"
+                  colorScheme="teal"
+                  variant="outline"
                   size="sm"
                   onClick={() => {
                     setEditIdx(idx);
                     setEditValue(todo.text);
                   }}
                   mr={1}
-                  _hover={{ bg: "blue.100" }}
-                  _dark={{ _hover: { bg: "blue.700" } }}
-                >
-                  <MdEdit />
-                </IconButton>
+                  icon={<MdEdit />}
+                  _hover={{ bg: "teal.100" }}
+                  _dark={{ _hover: { bg: "teal.700" } }}
+                />
               )}
               {/* 削除ボタン */}
               <IconButton
                 aria-label="削除"
                 colorScheme="red"
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => removeTodo(idx)}
+                icon={<MdDelete />}
                 _hover={{ bg: "red.100" }}
                 _dark={{ _hover: { bg: "red.700" } }}
-              >
-                <MdDelete />
-              </IconButton>
+              />
             </Flex>
           </Reorder.Item>
         ))}
