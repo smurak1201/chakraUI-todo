@@ -1,5 +1,5 @@
 // Chakra UIのButton, Flex, Inputをインポート
-import { Button, Flex, Input } from "@chakra-ui/react";
+import { Button, Flex, Input, Box } from "@chakra-ui/react";
 // カラーモード切替用のカスタムフックをインポート
 import { useColorMode } from "@/components/ui/color-mode";
 
@@ -14,29 +14,51 @@ interface TodoFormProps {
 export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
   // カラーモード取得（dark/light）
   const { colorMode } = useColorMode();
+
+  // ログアウト処理
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    window.location.reload();
+  };
+
   return (
-    // フォーム全体のレイアウト
-    <Flex
-      as="form"
-      onSubmit={(e) => {
-        e.preventDefault(); // フォーム送信時のリロード防止
-        addTodo(); // Todo追加処理
-      }}
-      mb={6}
-      gap={2}
-    >
-      {/* 入力欄 */}
-      <Input
-        placeholder="新しいタスクを入力..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)} // 入力値の変更を反映
-        bg={colorMode === "dark" ? "gray.700" : "white"} // カラーモードで背景色切替
-        fontSize="16px" // スマホでの自動ズーム防止
-      />
-      {/* 追加ボタン */}
-      <Button colorScheme="teal" onClick={addTodo} type="submit">
-        追加
+    <Box position="relative" w="100%">
+      {/* ログアウトボタン 左上 */}
+      <Button
+        position="absolute"
+        top={-12}
+        left={0}
+        colorScheme="teal"
+        onClick={handleLogout}
+        variant="solid"
+        zIndex={10}
+      >
+        ログアウト
       </Button>
-    </Flex>
+      {/* フォーム全体のレイアウト */}
+      <Flex
+        as="form"
+        onSubmit={(e) => {
+          e.preventDefault(); // フォーム送信時のリロード防止
+          addTodo(); // Todo追加処理
+        }}
+        mb={6}
+        gap={2}
+      >
+        {/* 入力欄 */}
+        <Input
+          placeholder="新しいタスクを入力..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)} // 入力値の変更を反映
+          bg={colorMode === "dark" ? "gray.700" : "white"} // カラーモードで背景色切替
+          fontSize="16px" // スマホでの自動ズーム防止
+        />
+        {/* 追加ボタン */}
+        <Button colorScheme="teal" type="submit">
+          追加
+        </Button>
+      </Flex>
+    </Box>
   );
 }
