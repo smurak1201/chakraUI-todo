@@ -105,6 +105,7 @@ export function LoginForm({
             bg={inputBg}
             borderRadius="md"
             boxShadow="sm"
+            fontSize={16}
           />
           <Input
             mb={6}
@@ -116,6 +117,7 @@ export function LoginForm({
             bg={inputBg}
             borderRadius="md"
             boxShadow="sm"
+            fontSize={16}
           />
           <Button
             colorScheme="teal"
