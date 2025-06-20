@@ -1,8 +1,9 @@
 // ===============================
 // AboutApp: README.mdの内容をアプリ内で表示するコンポーネント
 // ===============================
-import { Box, Heading, Text, Link } from "@chakra-ui/react";
+import { Box, Heading, Text, Link, Button } from "@chakra-ui/react";
 import { useColorMode } from "@/components/ui/color-mode";
+import { AiOutlineClose } from "react-icons/ai";
 
 // 区切り線コンポーネント（Divider代用）
 function SectionDivider() {
@@ -11,7 +12,7 @@ function SectionDivider() {
   return <Box w="100%" h="1px" my={4} bg={border} />;
 }
 
-export function AboutApp() {
+export function AboutApp({ onClose }: { onClose?: () => void }) {
   const { colorMode } = useColorMode();
   const border = colorMode === "dark" ? "gray.700" : "gray.200";
   const tableBg = colorMode === "dark" ? "gray.700" : "gray.50";
@@ -29,7 +30,34 @@ export function AboutApp() {
       borderColor={border}
       bg={bg}
       boxShadow="md"
+      position="relative"
     >
+      {/* 閉じるボタン（右上） */}
+      {onClose && (
+        <Button
+          size="md"
+          variant="ghost"
+          position="absolute"
+          top={2}
+          right={2}
+          zIndex={10}
+          onClick={onClose}
+          fontSize="2xl"
+          fontWeight="bold"
+          p={2}
+          minW={10}
+          minH={10}
+          borderRadius="full"
+          color="gray.500"
+          _hover={{
+            bg: colorMode === "dark" ? "gray.700" : "gray.200",
+            color: "teal.500",
+          }}
+          aria-label="閉じる"
+        >
+          <AiOutlineClose />
+        </Button>
+      )}
       <Heading as="h2" size="lg" mb={4} textAlign="center">
         Chakra UI Todo アプリについて
       </Heading>
