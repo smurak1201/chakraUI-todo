@@ -15,27 +15,8 @@ export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
   // カラーモード取得（dark/light）
   const { colorMode } = useColorMode();
 
-  // ログアウト処理
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("username");
-    window.location.reload();
-  };
-
   return (
     <Box position="relative" w="100%">
-      {/* ログアウトボタン 左上 */}
-      <Button
-        position="absolute"
-        top={-12}
-        left={0}
-        colorScheme="teal"
-        onClick={handleLogout}
-        variant="solid"
-        zIndex={10}
-      >
-        ログアウト
-      </Button>
       {/* フォーム全体のレイアウト */}
       <Flex
         as="form"
