@@ -5,7 +5,7 @@ import { useColorMode } from "@/components/ui/color-mode";
 export function LoginForm({
   onLogin,
 }: {
-  onLogin: (localMode?: boolean) => void;
+  onLogin: (localMode?: boolean, errorMsg?: string) => void;
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,23 +27,23 @@ export function LoginForm({
         body: JSON.stringify({ username, password }),
       });
       if (!res.ok) {
-        // サーバに接続できない場合のみローカルモード
         localStorage.setItem("localMode", "true");
-        onLogin(true);
+        onLogin(true, "サーバに接続できません。ローカルモードで動作します。");
         return;
       }
       const data = await res.json();
       if (data.success) {
         localStorage.removeItem("localMode");
-        onLogin(false);
+        onLogin(false, "");
       } else {
-        // サーバ接続時は認証失敗時もローカルモード
         localStorage.setItem("localMode", "true");
-        onLogin(true);
+        onLogin(
+          true,
+          "ユーザー名またはパスワードが違います。ローカルモードで動作します。"
+        );
       }
     } catch (e) {
-      // サーバに接続できない場合のみローカルモード
-      onLogin(true);
+      onLogin(true, "サーバに接続できません。ローカルモードで動作します。");
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,7 @@
 // ReactのuseStateフックをインポート
 import { useState, useEffect } from "react";
 // Chakra UIのレイアウト・見出し・カラートークン取得フック
-import { Flex, Heading, useToken, Button } from "@chakra-ui/react";
+import { Flex, Heading, useToken, Button, Box } from "@chakra-ui/react";
 // カラーモード切替ボタン
 import { ColorModeToggle } from "./components/ColorModeToggle";
 // Todo追加フォーム
@@ -24,6 +24,7 @@ export default function App() {
   const [isLocalMode, setIsLocalMode] = useState(() => {
     return localStorage.getItem("localMode") === "true";
   });
+  const [error, setError] = useState("");
 
   // Todo一覧取得
   useEffect(() => {
@@ -115,15 +116,17 @@ export default function App() {
   if (!isLoggedIn) {
     return (
       <LoginForm
-        onLogin={(localMode = false) => {
+        onLogin={(localMode = false, errorMsg = "") => {
           setIsLoggedIn(true);
           localStorage.setItem("isLoggedIn", "true");
           if (localMode) {
             setIsLocalMode(true);
             setTodos([]); // ローカルモード時はDBデータを消す
+            setError(errorMsg);
           } else {
             setIsLocalMode(false);
             localStorage.removeItem("localMode");
+            setError("");
           }
         }}
       />
@@ -140,6 +143,12 @@ export default function App() {
       position="relative"
       mt={12}
     >
+      {/* ローカルモード時の案内・エラー表示 */}
+      {isLocalMode && error && (
+        <Box color="orange.400" textAlign="center" mb={4} fontWeight="bold">
+          {error}
+        </Box>
+      )}
       {/* 上部バー：ログアウトボタンとカラーモード切替ボタンを左右に配置 */}
       <Flex
         w="100%"
