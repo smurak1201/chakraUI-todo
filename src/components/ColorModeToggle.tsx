@@ -24,14 +24,21 @@ export function ColorModeToggle() {
   };
 
   return (
-    // ボタンのみを表示（アニメーションなし）
-    <div
-      style={{ position: "relative", alignSelf: "flex-end", marginBottom: 16 }}
+    <Button
+      ref={btnRef}
+      onClick={handleClick}
+      zIndex={2}
+      position="relative"
+      size="sm"
+      variant="outline"
+      colorScheme="teal"
+      fontWeight="bold"
+      borderRadius="md"
+      boxShadow="md"
+      letterSpacing={1}
     >
-      <Button ref={btnRef} onClick={handleClick} zIndex={2} position="relative">
-        カラーモード切替
-      </Button>
-    </div>
+      カラーモード切替
+    </Button>
   );
 }
 // --- 学習用コメント ---
