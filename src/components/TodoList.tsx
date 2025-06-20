@@ -36,7 +36,11 @@ export function TodoList({
           <Reorder.Item
             value={todo}
             key={todo}
-            style={{ listStyle: "none", width: "100%" }}
+            style={{
+              listStyle: "none",
+              width: "100%",
+              marginBottom: idx !== todos.length - 1 ? 12 : 0,
+            }}
           >
             <Flex
               align="center"
