@@ -91,14 +91,13 @@ export default function App() {
       position="relative"
       mt={12}
     >
-      {/* 上部バー：ログアウトボタンとカラーモード切替ボタンを左右に配置 */}
+      {/* 上部バー：ログアウトボタンとカラーモード切替・アプリについてボタンを左右に配置 */}
       <Flex
         w="100%"
         maxW="md"
         mx="auto"
         justify="space-between"
         align="center"
-        mb={4}
         position="absolute"
         top={4}
         left="50%"
@@ -117,21 +116,20 @@ export default function App() {
         >
           ログアウト
         </Button>
-        {/* カラーモード切替ボタン */}
-        <ColorModeToggle />
+        {/* 右側：アプリについてボタン＋カラーモード切替ボタンを横並びで配置 */}
+        <Flex align="center" gap={2}>
+          <Button
+            size="xs"
+            variant="ghost"
+            colorScheme="gray"
+            onClick={() => setShowAbout(true)}
+          >
+            アプリについて
+          </Button>
+          <ColorModeToggle />
+        </Flex>
       </Flex>
       {/* アプリ情報表示ボタン */}
-      <Button
-        size="xs"
-        variant="ghost"
-        colorScheme="gray"
-        mt={2}
-        mb={2}
-        onClick={() => setShowAbout(true)}
-        alignSelf="flex-end"
-      >
-        アプリについて
-      </Button>
       {/* アプリ情報ダイアログ風表示 */}
       {showAbout && (
         <Box
