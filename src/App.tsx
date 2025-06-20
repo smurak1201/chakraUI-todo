@@ -22,7 +22,7 @@ export default function App() {
   // Todo一覧取得
   useEffect(() => {
     if (!isLoggedIn) return;
-    fetch("http://localhost/chakuraUI-todo/todos.php")
+    fetch("http://localhost/chakuraUI-todo/todo.php")
       .then((res) => res.json())
       .then((data) => setTodos(data));
   }, [isLoggedIn]);
@@ -30,7 +30,7 @@ export default function App() {
   // Todo追加
   const addTodo = async () => {
     if (input.trim() === "") return;
-    const res = await fetch("http://localhost/chakuraUI-todo/todos.php", {
+    const res = await fetch("http://localhost/chakuraUI-todo/todo.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: input }),
@@ -42,7 +42,7 @@ export default function App() {
   // Todo削除
   const removeTodo = async (index: number) => {
     const id = todos[index].id;
-    await fetch("http://localhost/chakuraUI-todo/todos.php", {
+    await fetch("http://localhost/chakuraUI-todo/todo.php", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
@@ -53,7 +53,7 @@ export default function App() {
   const updateTodo = async (index: number, value: string) => {
     if (value.trim() === "") return;
     const id = todos[index].id;
-    await fetch("http://localhost/chakuraUI-todo/todos.php", {
+    await fetch("http://localhost/chakuraUI-todo/todo.php", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, text: value }),
