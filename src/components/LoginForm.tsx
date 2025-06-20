@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { Box, Button, Flex, Input, useToken } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Spinner, useToken } from "@chakra-ui/react";
 import { useColorMode } from "@/components/ui/color-mode";
 
-export function LoginForm({ onLogin }: { onLogin: () => void }) {
+export function LoginForm({
+  onLogin,
+}: {
+  onLogin: (localMode?: boolean) => void;
+}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [teal500] = useToken("colors", ["teal.500"]);
   const { colorMode } = useColorMode();
   const boxBg = colorMode === "dark" ? "gray.800" : "white";
@@ -13,16 +18,34 @@ export function LoginForm({ onLogin }: { onLogin: () => void }) {
   const inputBg = colorMode === "dark" ? "gray.700" : "gray.100";
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost/chakuraUI-todo/login.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      onLogin();
-    } else {
-      setError("ログイン失敗");
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("http://localhost/chakuraUI-todo/login.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (!res.ok) {
+        // サーバに接続できない場合のみローカルモード
+        localStorage.setItem("localMode", "true");
+        onLogin(true);
+        return;
+      }
+      const data = await res.json();
+      if (data.success) {
+        localStorage.removeItem("localMode");
+        onLogin(false);
+      } else {
+        // サーバ接続時は認証失敗時もローカルモード
+        localStorage.setItem("localMode", "true");
+        onLogin(true);
+      }
+    } catch (e) {
+      // サーバに接続できない場合のみローカルモード
+      onLogin(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,6 +111,11 @@ export function LoginForm({ onLogin }: { onLogin: () => void }) {
             boxShadow="md"
             letterSpacing={1}
             color={teal500}
+            loading={loading}
+            loadingText="ログイン中..."
+            spinnerPlacement="start"
+            spinner={<Spinner size="sm" color={teal500} />}
+            disabled={loading}
           >
             ログイン
           </Button>
