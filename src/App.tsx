@@ -13,6 +13,8 @@ import { TodoForm } from "./components/TodoForm";
 import { TodoList } from "./components/TodoList";
 // ログインフォーム
 import { LoginForm } from "./components/LoginForm";
+// アプリ情報
+import { AboutApp } from "./components/AboutApp";
 // カスタムフック（状態管理・認証・カラーモード）をインポート
 import { useTodos } from "./hooks/useTodos";
 import { useAuth } from "./hooks/useAuth";
@@ -42,6 +44,8 @@ export default function App() {
   const [teal500] = useToken("colors", ["teal.500"]);
   // カラーモード制御用（ライト/ダーク切替）
   const { setColorMode } = useColorMode();
+  // アプリ情報表示用の状態
+  const [showAbout, setShowAbout] = useState(false);
 
   // ===============================
   // ログアウト時にライトモードへ強制切り替え
@@ -116,6 +120,45 @@ export default function App() {
         {/* カラーモード切替ボタン */}
         <ColorModeToggle />
       </Flex>
+      {/* アプリ情報表示ボタン */}
+      <Button
+        size="xs"
+        variant="ghost"
+        colorScheme="gray"
+        mt={2}
+        mb={2}
+        onClick={() => setShowAbout(true)}
+        alignSelf="flex-end"
+      >
+        アプリについて
+      </Button>
+      {/* アプリ情報ダイアログ風表示 */}
+      {showAbout && (
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          w="100vw"
+          h="100vh"
+          bg="blackAlpha.600"
+          zIndex={1000}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Box position="relative" zIndex={1001}>
+            <AboutApp />
+            <Button
+              size="sm"
+              mt={2}
+              w="100%"
+              onClick={() => setShowAbout(false)}
+            >
+              閉じる
+            </Button>
+          </Box>
+        </Box>
+      )}
       {/* タイトル */}
       <Heading mb={6} color={teal500} mt={12}>
         Chakra UI Todoアプリ
