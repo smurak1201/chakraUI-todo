@@ -1,4 +1,7 @@
-// ReactのuseStateフックをインポート
+// ===============================
+// アプリ全体のメインコンポーネント
+// ===============================
+// ReactのuseState, useEffectフックをインポート
 import { useState, useEffect } from "react";
 // Chakra UIのレイアウト・見出し・カラートークン取得フック
 import { Flex, Heading, useToken, Button, Box } from "@chakra-ui/react";
@@ -11,22 +14,31 @@ import { TodoList } from "./components/TodoList";
 // ログインフォーム
 import { LoginForm } from "./components/LoginForm";
 
-// アプリ全体のレイアウトコンポーネント
+// ===============================
+// App: アプリ全体のレイアウト・状態管理
+// ===============================
 export default function App() {
+  // ログイン状態を管理（localStorageで永続化）
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // localStorageから初期値を取得
     return localStorage.getItem("isLoggedIn") === "true";
   });
-  // Todoリストの状態（id, text型に変更）
+  // Todoリストの状態（id, text型の配列）
   const [todos, setTodos] = useState<{ id: number; text: string }[]>([]);
+  // 入力欄の値
   const [input, setInput] = useState("");
+  // Chakra UIのカラートークン取得
   const [teal500] = useToken("colors", ["teal.500"]);
+  // ローカルモード（API通信せずメモリだけで動作）
   const [isLocalMode, setIsLocalMode] = useState(() => {
     return localStorage.getItem("localMode") === "true";
   });
+  // エラーメッセージ
   const [error, setError] = useState("");
 
-  // Todo一覧取得
+  // ===============================
+  // ログイン後、Todo一覧をAPIから取得（ローカルモード時はスキップ）
+  // ===============================
   useEffect(() => {
     if (!isLoggedIn) return;
     if (isLocalMode) return; // ローカルモード時はAPI通信しない
@@ -37,12 +49,14 @@ export default function App() {
       })
       .then((data) => setTodos(data))
       .catch(() => {
-        setIsLocalMode(true);
+        setIsLocalMode(true); // API失敗時はローカルモードに切り替え
         localStorage.setItem("localMode", "true");
       });
   }, [isLoggedIn, isLocalMode]);
 
-  // Todo追加
+  // ===============================
+  // Todo追加処理
+  // ===============================
   const addTodo = async () => {
     if (input.trim() === "") return;
     if (isLocalMode) {
@@ -70,7 +84,9 @@ export default function App() {
       setInput("");
     }
   };
-  // Todo削除
+  // ===============================
+  // Todo削除処理
+  // ===============================
   const removeTodo = async (index: number) => {
     if (isLocalMode) {
       setTodos(todos.filter((_, i) => i !== index));
@@ -90,7 +106,9 @@ export default function App() {
       setTodos(todos.filter((_, i) => i !== index));
     }
   };
-  // Todo編集
+  // ===============================
+  // Todo編集処理
+  // ===============================
   const updateTodo = async (index: number, value: string) => {
     if (value.trim() === "") return;
     if (isLocalMode) {
@@ -112,7 +130,9 @@ export default function App() {
     }
   };
 
+  // ===============================
   // ログインしていない場合はLoginFormを表示
+  // ===============================
   if (!isLoggedIn) {
     return (
       <LoginForm
@@ -133,6 +153,9 @@ export default function App() {
     );
   }
 
+  // ===============================
+  // ログイン後の画面レイアウト
+  // ===============================
   return (
     // 全体レイアウト
     <Flex

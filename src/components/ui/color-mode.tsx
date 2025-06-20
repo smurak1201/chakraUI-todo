@@ -1,58 +1,76 @@
-"use client"
+// ===============================
+// カラーモード（ダーク/ライト）管理のカスタムフック
+// ===============================
+"use client";
 
-import type { IconButtonProps, SpanProps } from "@chakra-ui/react"
-import { ClientOnly, IconButton, Skeleton, Span } from "@chakra-ui/react"
-import { ThemeProvider, useTheme } from "next-themes"
-import type { ThemeProviderProps } from "next-themes"
-import * as React from "react"
-import { LuMoon, LuSun } from "react-icons/lu"
+import type { IconButtonProps, SpanProps } from "@chakra-ui/react";
+import { ClientOnly, IconButton, Skeleton, Span } from "@chakra-ui/react";
+import { ThemeProvider, useTheme } from "next-themes";
+import type { ThemeProviderProps } from "next-themes";
+import * as React from "react";
+import { LuMoon, LuSun } from "react-icons/lu";
 
+// ===============================
+// Chakra UIのカラーモードをNext.jsでも使えるようにするProvider
+// ===============================
 export interface ColorModeProviderProps extends ThemeProviderProps {}
 
 export function ColorModeProvider(props: ColorModeProviderProps) {
   return (
     <ThemeProvider attribute="class" disableTransitionOnChange {...props} />
-  )
+  );
 }
 
-export type ColorMode = "light" | "dark"
+// ===============================
+// カラーモードの値や切り替え関数を返すカスタムフック
+// ===============================
+export type ColorMode = "light" | "dark";
 
 export interface UseColorModeReturn {
-  colorMode: ColorMode
-  setColorMode: (colorMode: ColorMode) => void
-  toggleColorMode: () => void
+  colorMode: ColorMode;
+  setColorMode: (colorMode: ColorMode) => void;
+  toggleColorMode: () => void;
 }
 
 export function useColorMode(): UseColorModeReturn {
-  const { resolvedTheme, setTheme, forcedTheme } = useTheme()
-  const colorMode = forcedTheme || resolvedTheme
+  const { resolvedTheme, setTheme, forcedTheme } = useTheme();
+  const colorMode = forcedTheme || resolvedTheme;
   const toggleColorMode = () => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark")
-  }
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
   return {
     colorMode: colorMode as ColorMode,
     setColorMode: setTheme,
     toggleColorMode,
-  }
+  };
 }
 
+// ===============================
+// カラーモードによって値を切り替える便利関数
+// ===============================
 export function useColorModeValue<T>(light: T, dark: T) {
-  const { colorMode } = useColorMode()
-  return colorMode === "dark" ? dark : light
+  const { colorMode } = useColorMode();
+  return colorMode === "dark" ? dark : light;
 }
 
+// ===============================
+// カラーモードに応じたアイコンを返すコンポーネント
+// ===============================
 export function ColorModeIcon() {
-  const { colorMode } = useColorMode()
-  return colorMode === "dark" ? <LuMoon /> : <LuSun />
+  const { colorMode } = useColorMode();
+  return colorMode === "dark" ? <LuMoon /> : <LuSun />;
 }
 
+// ===============================
+// カラーモード切替ボタンのサンプル
+// ===============================
 interface ColorModeButtonProps extends Omit<IconButtonProps, "aria-label"> {}
 
 export const ColorModeButton = React.forwardRef<
   HTMLButtonElement,
   ColorModeButtonProps
 >(function ColorModeButton(props, ref) {
-  const { toggleColorMode } = useColorMode()
+  const { toggleColorMode } = useColorMode();
   return (
     <ClientOnly fallback={<Skeleton boxSize="8" />}>
       <IconButton
@@ -72,9 +90,12 @@ export const ColorModeButton = React.forwardRef<
         <ColorModeIcon />
       </IconButton>
     </ClientOnly>
-  )
-})
+  );
+});
 
+// ===============================
+// ライトモード/ダークモード用のラッパー
+// ===============================
 export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
   function LightMode(props, ref) {
     return (
@@ -87,9 +108,9 @@ export const LightMode = React.forwardRef<HTMLSpanElement, SpanProps>(
         ref={ref}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
   function DarkMode(props, ref) {
@@ -103,6 +124,10 @@ export const DarkMode = React.forwardRef<HTMLSpanElement, SpanProps>(
         ref={ref}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
+
+// --- 学習用コメント ---
+// ・カラーモードの切り替えや値の取得を簡単にするカスタムフック
+// ・Next.jsやChakra UIのテーマ連携もサポート

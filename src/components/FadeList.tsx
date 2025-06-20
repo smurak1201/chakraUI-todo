@@ -1,3 +1,6 @@
+// ===============================
+// アニメーション付きリスト表示コンポーネント
+// ===============================
 // framer-motionのアニメーション用コンポーネントをインポート
 import { AnimatePresence, motion } from "framer-motion";
 // 型インポート（verbatimModuleSyntax対応）
@@ -8,7 +11,9 @@ interface FadeListProps {
   gap?: number;
 }
 
+// ===============================
 // FadeList: 子要素の追加・削除時にfadeアニメーションを付与するリスト
+// ===============================
 export function FadeList({ children, gap = 12 }: FadeListProps) {
   return (
     <AnimatePresence initial={false}>
@@ -30,3 +35,6 @@ export function FadeList({ children, gap = 12 }: FadeListProps) {
     </AnimatePresence>
   );
 }
+// --- 学習用コメント ---
+// ・framer-motionを使うと、要素の追加・削除にアニメーションを簡単に付けられる
+// ・keyはReactの再描画のために必須

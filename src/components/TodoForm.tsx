@@ -1,16 +1,23 @@
+// ===============================
+// Todo追加フォームのコンポーネント
+// ===============================
 // Chakra UIのButton, Flex, Inputをインポート
 import { Button, Flex, Input, Box } from "@chakra-ui/react";
 // カラーモード切替用のカスタムフックをインポート
 import { useColorMode } from "@/components/ui/color-mode";
 
+// ===============================
 // TodoFormコンポーネントのprops型定義
+// ===============================
 interface TodoFormProps {
   input: string; // 入力欄の値
   setInput: (v: string) => void; // 入力欄の値を更新する関数
   addTodo: () => void; // Todoを追加する関数
 }
 
+// ===============================
 // Todo追加フォーム本体
+// ===============================
 export function TodoForm({ input, setInput, addTodo }: TodoFormProps) {
   // カラーモード取得（dark/light）
   const { colorMode } = useColorMode();

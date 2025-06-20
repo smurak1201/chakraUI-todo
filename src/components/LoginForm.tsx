@@ -1,3 +1,6 @@
+// ===============================
+// ログイン画面のコンポーネント
+// ===============================
 import { useState } from "react";
 import { Box, Button, Flex, Input, Spinner, useToken } from "@chakra-ui/react";
 import { useColorMode } from "@/components/ui/color-mode";
@@ -7,44 +10,60 @@ export function LoginForm({
 }: {
   onLogin: (localMode?: boolean, errorMsg?: string) => void;
 }) {
+  // ユーザー名・パスワードの入力値を管理
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // エラーメッセージ
   const [error, setError] = useState("");
+  // ログイン中のローディング状態
   const [loading, setLoading] = useState(false);
+  // ローカルモード確認ダイアログの表示状態
   const [showLocalConfirm, setShowLocalConfirm] = useState(false);
+  // ローカルモード確認ダイアログの種類（認証エラー or サーバ接続エラー）
   const [localErrorType, setLocalErrorType] = useState<
     "auth" | "server" | null
   >(null);
+  // Chakra UIのカラートークン取得
   const [teal500] = useToken("colors", ["teal.500"]);
+  // カラーモード取得
   const { colorMode } = useColorMode();
+  // 背景色などの設定
   const boxBg = colorMode === "dark" ? "gray.800" : "white";
   const pageBg = colorMode === "dark" ? "gray.900" : "gray.50";
   const inputBg = colorMode === "dark" ? "gray.700" : "gray.100";
 
+  // ===============================
+  // ログインボタン押下時の処理
+  // ===============================
   const handleLogin = async () => {
     setLoading(true);
     setError("");
     try {
+      // APIにユーザー名・パスワードを送信
       const res = await fetch("http://localhost/chakuraUI-todo/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
       if (!res.ok) {
+        // サーバに接続できない場合
         setLocalErrorType("server");
         setShowLocalConfirm(true);
         return;
       }
       const data = await res.json();
       if (data.success) {
+        // ログイン成功
         localStorage.removeItem("localMode");
-        window.scrollTo(0, 0); // ログイン成功時に画面を最上部へ
+        window.scrollTo(0, 0); // 画面を最上部へ
         onLogin(false, "");
       } else {
+        // ユーザー名・パスワードが違う場合
         setLocalErrorType("auth");
         setShowLocalConfirm(true);
       }
     } catch (e) {
+      // サーバに接続できない場合
       setLocalErrorType("server");
       setShowLocalConfirm(true);
     } finally {
@@ -52,7 +71,9 @@ export function LoginForm({
     }
   };
 
+  // ===============================
   // ローカルモードで続行する場合の処理
+  // ===============================
   const handleLocalContinue = () => {
     localStorage.setItem("localMode", "true");
     setShowLocalConfirm(false);
@@ -64,10 +85,13 @@ export function LoginForm({
       msg = "サーバに接続できません。ローカルモードで動作します。";
     }
     setError(msg);
-    window.scrollTo(0, 0); // ローカルモードで続行時も画面を最上部へ
+    window.scrollTo(0, 0); // 画面を最上部へ
     onLogin(true, msg);
   };
 
+  // ===============================
+  // 画面レイアウト
+  // ===============================
   return (
     <Flex
       direction="column"
@@ -90,25 +114,27 @@ export function LoginForm({
         flexDirection="column"
         alignItems="center"
       >
+        {/* ログインフォーム本体 */}
         <form
           style={{ width: "100%" }}
           onSubmit={(e) => {
-            e.preventDefault();
-            handleLogin();
+            e.preventDefault(); // ページリロード防止
+            handleLogin(); // ログイン処理
           }}
         >
+          {/* ユーザー名入力欄 */}
           <Input
             mb={4}
             placeholder="ユーザー名"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             size="md"
-            autoFocus
             bg={inputBg}
             borderRadius="md"
             boxShadow="sm"
             fontSize={16}
           />
+          {/* パスワード入力欄 */}
           <Input
             mb={6}
             placeholder="パスワード"
@@ -121,6 +147,7 @@ export function LoginForm({
             boxShadow="sm"
             fontSize={16}
           />
+          {/* ログインボタン */}
           <Button
             colorScheme="teal"
             variant="outline"
@@ -141,13 +168,14 @@ export function LoginForm({
           >
             ログイン
           </Button>
+          {/* エラーメッセージ表示 */}
           {error && (
             <Box color="red.500" textAlign="center" mt={2} fontWeight="bold">
               {error}
             </Box>
           )}
         </form>
-        {/* カスタムダイアログ */}
+        {/* ローカルモード確認ダイアログ（カスタムUI） */}
         {showLocalConfirm && (
           <Box
             position="fixed"

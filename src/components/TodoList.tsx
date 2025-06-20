@@ -1,3 +1,6 @@
+// ===============================
+// Todoリスト表示コンポーネント
+// ===============================
 // Chakra UIのレイアウト・UI部品をインポート
 import { Box, Flex, IconButton, Input } from "@chakra-ui/react";
 // ゴミ箱アイコンと編集アイコン
@@ -7,7 +10,9 @@ import { useColorModeValue } from "@/components/ui/color-mode";
 import { useState } from "react";
 import { Reorder, AnimatePresence } from "framer-motion";
 
+// ===============================
 // TodoListコンポーネントのprops型定義
+// ===============================
 interface TodoListProps {
   todos: { id: number; text: string }[]; // Todoリスト配列
   removeTodo: (index: number) => void;
@@ -15,7 +20,9 @@ interface TodoListProps {
   setTodos: (todos: { id: number; text: string }[]) => void;
 }
 
+// ===============================
 // Todoリスト本体
+// ===============================
 export function TodoList({
   todos,
   removeTodo,
@@ -25,12 +32,13 @@ export function TodoList({
   // 編集中のインデックスと値を管理
   const [editIdx, setEditIdx] = useState<number | null>(null); // 編集中のTodoのインデックス
   const [editValue, setEditValue] = useState(""); // 編集中の値
-  // リストアイテムの背景色をカラーモードで切り替え（Inputと同じ色に）
+  // リストアイテムの背景色をカラーモードで切り替え
   const itemBg = useColorModeValue("white", "gray.700");
 
   return (
     // リスト全体のラッパー
     <Box w="100%" maxW="md" mx="auto">
+      {/* framer-motionでドラッグ&ドロップやアニメーション */}
       <Reorder.Group axis="y" values={todos} onReorder={setTodos}>
         <AnimatePresence>
           {todos.map((todo, idx) => (
