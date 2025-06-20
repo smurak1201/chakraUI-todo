@@ -92,10 +92,11 @@ export function TodoList({
                     setEditValue(todo.text);
                   }}
                   mr={1}
-                  icon={<MdEdit />}
                   _hover={{ bg: "teal.100" }}
                   _dark={{ _hover: { bg: "teal.700" } }}
-                />
+                >
+                  <MdEdit />
+                </IconButton>
               )}
               {/* 削除ボタン */}
               <IconButton
@@ -104,10 +105,11 @@ export function TodoList({
                 variant="outline"
                 size="sm"
                 onClick={() => removeTodo(idx)}
-                icon={<MdDelete />}
                 _hover={{ bg: "red.100" }}
                 _dark={{ _hover: { bg: "red.700" } }}
-              />
+              >
+                <MdDelete />
+              </IconButton>
             </Flex>
           </Reorder.Item>
         ))}
