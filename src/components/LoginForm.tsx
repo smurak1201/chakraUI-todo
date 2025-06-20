@@ -66,7 +66,13 @@ export function LoginForm({ onLogin }: { onLogin: () => void }) {
             size="md"
             bg="gray.100"
           />
-          <Button colorScheme="teal" type="submit" width="100%" mb={2}>
+          <Button
+            colorScheme="teal"
+            variant="outline"
+            type="submit"
+            width="100%"
+            mb={2}
+          >
             ログイン
           </Button>
           {error && (
