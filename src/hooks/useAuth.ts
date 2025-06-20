@@ -6,20 +6,20 @@ import { useState } from "react";
 export function useAuth() {
   // ログイン状態
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
+    return sessionStorage.getItem("isLoggedIn") === "true";
   });
 
   // ログイン処理
   const login = () => {
     setIsLoggedIn(true);
-    localStorage.setItem("isLoggedIn", "true");
+    sessionStorage.setItem("isLoggedIn", "true");
   };
 
   // ログアウト処理
   const logout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("username");
+    sessionStorage.removeItem("isLoggedIn");
+    sessionStorage.removeItem("username");
   };
 
   return {
