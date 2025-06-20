@@ -147,15 +147,7 @@ export default function App() {
           justifyContent="center"
         >
           <Box position="relative" zIndex={1001}>
-            <AboutApp />
-            <Button
-              size="sm"
-              mt={2}
-              w="100%"
-              onClick={() => setShowAbout(false)}
-            >
-              閉じる
-            </Button>
+            <AboutApp onClose={() => setShowAbout(false)} />
           </Box>
         </Box>
       )}
