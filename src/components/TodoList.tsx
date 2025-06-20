@@ -5,7 +5,6 @@ import { MdDelete, MdEdit } from "react-icons/md";
 // カラーモード取得用
 import { useColorModeValue } from "@/components/ui/color-mode";
 import { useState } from "react";
-import { FadeList } from "./FadeList";
 import { Reorder } from "framer-motion";
 
 // TodoListコンポーネントのprops型定義
