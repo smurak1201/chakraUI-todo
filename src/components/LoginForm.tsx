@@ -38,6 +38,7 @@ export function LoginForm({
       const data = await res.json();
       if (data.success) {
         localStorage.removeItem("localMode");
+        window.scrollTo(0, 0); // ログイン成功時に画面を最上部へ
         onLogin(false, "");
       } else {
         setLocalErrorType("auth");
@@ -63,6 +64,7 @@ export function LoginForm({
       msg = "サーバに接続できません。ローカルモードで動作します。";
     }
     setError(msg);
+    window.scrollTo(0, 0); // ローカルモードで続行時も画面を最上部へ
     onLogin(true, msg);
   };
 
