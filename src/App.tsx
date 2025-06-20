@@ -1,7 +1,7 @@
 // ReactのuseStateフックをインポート
 import { useState, useEffect } from "react";
 // Chakra UIのレイアウト・見出し・カラートークン取得フック
-import { Flex, Heading, useToken } from "@chakra-ui/react";
+import { Flex, Heading, useToken, Button } from "@chakra-ui/react";
 // カラーモード切替ボタン
 import { ColorModeToggle } from "./components/ColorModeToggle";
 // Todo追加フォーム
@@ -78,11 +78,46 @@ export default function App() {
 
   return (
     // 全体レイアウト
-    <Flex direction="column" align="center" minH="100vh" p={8}>
-      {/* カラーモード切替ボタン */}
-      <ColorModeToggle />
+    <Flex
+      direction="column"
+      align="center"
+      minH="100vh"
+      p={8}
+      position="relative"
+    >
+      {/* 上部バー：ログアウトボタンとカラーモード切替ボタンを左右に配置 */}
+      <Flex
+        w="100%"
+        maxW="md"
+        mx="auto"
+        justify="space-between"
+        align="center"
+        mb={4}
+        position="absolute"
+        top={4}
+        left="50%"
+        transform="translateX(-50%)"
+      >
+        <Button
+          colorScheme="teal"
+          variant="outline"
+          size="sm"
+          fontWeight="bold"
+          borderRadius="md"
+          boxShadow="md"
+          letterSpacing={1}
+          onClick={() => {
+            setIsLoggedIn(false);
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+          }}
+        >
+          ログアウト
+        </Button>
+        <ColorModeToggle />
+      </Flex>
       {/* タイトル */}
-      <Heading mb={6} color={teal500}>
+      <Heading mb={6} color={teal500} mt={12}>
         Chakra UI Todoアプリ
       </Heading>
       {/* Todo追加フォーム */}
